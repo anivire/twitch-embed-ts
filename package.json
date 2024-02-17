@@ -1,0 +1,16 @@
+{
+  "name": "twitch-embed-ts-wrapper",
+  "version": "1.0.0",
+  "description": "Twitch embed and player typescript wrapper.",
+  "main": "index.ts",
+  "scripts": {
+    "build": "npx tsc index.ts"
+  },
+  "author": "anivire",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
