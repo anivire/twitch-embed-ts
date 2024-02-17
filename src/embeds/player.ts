@@ -24,8 +24,8 @@ export class TwitchPlayer {
    */
   public static CreatePlayer(divId: string, options: TwitchPlayerOptions): TwitchPlayer {
     try {
-      if (window.Twitch.Player) {
-        const player = new window.Twitch.Player(divId, options);
+      if ((<any>window).Twitch && (<any>window).Twitch.Player) {
+        const player = new (<any>window).Twitch.Player(divId, options);
 
         return new TwitchPlayer(player);
       } else {

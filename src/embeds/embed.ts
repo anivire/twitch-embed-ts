@@ -22,8 +22,8 @@ export class TwitchEmbed {
     this.divId = divId;
 
     try {
-      if (window.Twitch && window.Twitch.Embed) {
-        this.embed = new window.Twitch.Embed(this.divId, this.embedOptions);
+      if ((<any>window).Twitch && (<any>window).Twitch.Embed) {
+        this.embed = new (<any>window).Twitch.Embed(this.divId, this.embedOptions);
         this.player = new TwitchPlayer(this.embed.getPlayer());
       } else {
         throw new Error('Twitch embed library is not provided or loaded, please provide library to page.');

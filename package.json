@@ -1,6 +1,6 @@
 {
   "name": "@anivire/twitch-embed-ts",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Twitch Embed API Typescript wrapper",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -9,8 +9,7 @@
     "url": "https://github.com/anivire/twitch-embed-ts"
   },
   "scripts": {
-    "build": "tsup ./src/index.ts --format cjs,esm --dts",
-    "lint": "tsc"
+    "build": "tsup ./src/index.ts"
   },
   "keywords": [
     "twitch-embed-api",
