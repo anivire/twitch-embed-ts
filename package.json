@@ -1,5 +1,5 @@
 {
-  "name": "@anivire/embed-ts",
+  "name": "@anivire/twitch-embed-ts",
   "version": "1.0.0",
   "description": "Twitch Embed API Typescript wrapper.",
   "main": "./src/index.ts",
