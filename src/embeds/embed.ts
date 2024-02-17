@@ -1,102 +1,106 @@
-import { TwitchPlaybackStats } from "./types/playback.types";
-import { TwitchPlayerEvents, TwitchPlayerOptions } from "./types/player.types";
-import { Quality } from "./types/quality.types";
+import { TwitchPlayer } from "./player";
+import { TwitchEmbedEvents, TwitchEmbedOptions } from "../models/embed.model";
+import { TwitchPlaybackStats } from "../models/playback.model";
+import { Quality } from "../models/quality.model";
 
-declare global {
-    interface Window {
-        Twitch: any;
+/**
+ * Twitch embed player with/out chat
+ */
+export class TwitchEmbed {
+  private readonly embed!: TwitchEmbed;
+  private readonly player!: TwitchPlayer;
+  private readonly embedOptions: TwitchEmbedOptions;
+  private readonly divId: string;
+
+  /**
+   * Creates a new Twitch embed instance
+   * @param divId the div HTML element where the player will appear
+   * @param options the player initialization options
+   */
+  constructor(divId: string, options: TwitchEmbedOptions) {
+    this.embedOptions = options;
+    this.divId = divId;
+
+    try {
+      if (window.Twitch && window.Twitch.Embed) {
+        this.embed = new window.Twitch.Embed(this.divId, this.embedOptions);
+        this.player = new TwitchPlayer(this.embed.getPlayer());
+      } else {
+        throw new Error('Twitch embed library is not provided or loaded, please provide library to page.');
+      }
+    } catch (e: unknown) {
+      console.error('Error initializing Twitch embed:', e instanceof Error ? e.message : e);
+      
+      throw e;
     }
   }
   
-  export class TwitchPlayer {
-    private player!: TwitchPlayer;
-
-    /**
-     * Creates a new Twitch player from player instance
-     * @param player player instance
-     * @constructor creates a new Twitch player instance
-     */
-    public static InitPlayer(player: TwitchPlayer): TwitchPlayer {
-      const twitchPlayer = new this();
-      twitchPlayer.player = player;
-
-      return twitchPlayer;
-    }
-    
-    /**
-     * Creates a new Twitch player given a <div> element and some options for the player
-     * @param divId the div HTML element where the player will appear
-     * @param options the player initialization options
-     * @constructor creates a new Twitch player instance
-     */
-    public static CreatePlayer(divId: string, options: TwitchPlayerOptions): TwitchPlayer {
-      const twitchPlayer = new this();
-
-      try {
-        if (window.Twitch && window.Twitch.Player) {
-          twitchPlayer.player = new window.Twitch.Player(
-            divId, 
-            options
-          );
-        }
-      } catch (e: unknown) {
-        console.error('Twitch embed library is not provided or loaded, please provide library to page.')
-        console.error(e instanceof Error && e.message);
-      }
-
-      return twitchPlayer;
-    }
-
-    /**
-   * Add event listener to twitch player
-   * @param event player event
+  /**
+   * Add event listener to twitch embed
+   * @param event embed event
    * @param callback function
    */
   public addEventListener(
-    event: TwitchPlayerEvents, 
+    event: TwitchEmbedEvents, 
     callback: Function
   ): void {
-    this.player.addEventListener(event, callback);
+    this.embed.addEventListener(event, callback);
   }
 
   /**
-   * Remove event listener from twitch player
-   * @param event player event
+   * Remove event listener from twitch embed
+   * @param event embed event
    * @param callback function
    */
   public removeEventListener(
-    event: TwitchPlayerEvents, 
+    event: TwitchEmbedEvents, 
     callback: Function
   ): void {
-    this.player.removeEventListener(event, callback);
+    this.embed.removeEventListener(event, callback);
+  }
+
+  /**
+   * Get div id for ijecting
+   * @returns div id
+   */
+  public getDivId(): string {
+    return this.divId;
+  }
+  
+  /**
+   * Get twitch embed player
+   * @returns twitch player object
+   */
+  public getPlayer(): TwitchPlayer {
+    return this.player;
   }
 
   /**
    * Disables display of Closed Captions
    */
   public disableCaptions(): void {
-    this.player.disableCaptions();
+    this.embed.disableCaptions();
   }
 
   /**
    * Enables display of Closed Captions
    */
   public enableCaptions(): void {
-    this.player.enableCaptions();
+    this.embed.enableCaptions();
   }
 
   /**
    * Pauses the player
    */
   public pause(): void {
-    this.player.pause();
+    this.embed.pause();
   }
 
   /**
    * Begins playing the specified video
    */
   public play(): void {
-    this.player.play();
+    this.embed.play();
   }
 
   /**
@@ -104,7 +108,7 @@ declare global {
    * @param timestamp time
    */
   public seek(timestamp: number): void {
-    this.player.seek(timestamp);
+    this.embed.seek(timestamp);
   }
 
   /**
@@ -112,7 +116,7 @@ declare global {
    * @param channel channel name
    */
   public setChannel(channel: string): void {
-    this.player.setChannel(channel);
+    this.embed.setChannel(channel);
   }
 
   /**
@@ -125,7 +129,7 @@ declare global {
    * @param videoId video id
    */
   public setCollection(collectionId: string, videoId?: string): void {
-    this.player.setCollection(collectionId, videoId)
+    this.embed.setCollection(collectionId, videoId)
   }
 
   /**
@@ -135,7 +139,7 @@ declare global {
    * @param quality 
    */
   public setQuality(quality: string): void {
-    this.player.setQuality(quality);
+    this.embed.setQuality(quality);
   }
 
   /**
@@ -144,7 +148,7 @@ declare global {
    * @param timestamp 
    */
   public setVideo(videoId: string, timestamp: number): void {
-    this.player.setVideo(videoId, timestamp);
+    this.embed.setVideo(videoId, timestamp);
   }
 
   /**
@@ -152,7 +156,7 @@ declare global {
    * @returns mute state
    */
   public getMuted(): boolean {
-    return this.player.getMuted();
+    return this.embed.getMuted();
   }
 
   /**
@@ -160,7 +164,7 @@ declare global {
    * @param muted mute state
    */
   public setMuted(muted: boolean): void {
-    this.player.setMuted(muted);
+    this.embed.setMuted(muted);
   }
  
   /**
@@ -168,7 +172,7 @@ declare global {
    * @returns value between 0.0 and 1.0
    */
   public getVolume(): number {
-    return this.player.getVolume();
+    return this.embed.getVolume();
   }
 
   /**
@@ -176,15 +180,15 @@ declare global {
    * @param volumeLevel value between 0.0 and 1.0
    */
   public setVolume(volumeLevel: number): void {
-    this.player.setVolume(volumeLevel);
+    this.embed.setVolume(volumeLevel);
   }
 
   /**
-   * Returns an object with statistics on the playerded video player and the current live stream or VOD
+   * Returns an object with statistics on the embedded video player and the current live stream or VOD
    * @returns object with statistics
    */
   public getPlaybackStats(): TwitchPlaybackStats {
-    return this.player.getPlaybackStats();
+    return this.embed.getPlaybackStats();
   }
 
   /**
@@ -192,7 +196,7 @@ declare global {
    * @returns channel name
    */
   public getChannel(): string {
-    return this.player.getChannel();
+    return this.embed.getChannel();
   }
 
   /**
@@ -200,7 +204,7 @@ declare global {
    * @returns video timestamp
    */
   public getCurrentTime(): number {
-    return this.player.getCurrentTime();
+    return this.embed.getCurrentTime();
   }
 
   /**
@@ -208,7 +212,7 @@ declare global {
    * @returns duration of the video
    */
   public getDuration(): number {
-    return this.player.getDuration();
+    return this.embed.getDuration();
   }
 
   /**
@@ -216,7 +220,7 @@ declare global {
    * @returns stream status
    */
   public getEnded(): boolean {
-    return this.player.getEnded();
+    return this.embed.getEnded();
   }
 
   /**
@@ -224,7 +228,7 @@ declare global {
    * @returns video qualities
    */
   public getQualities(): Quality[] {
-    return this.player.getQualities();
+    return this.embed.getQualities();
   }
 
   /**
@@ -232,7 +236,7 @@ declare global {
    * @returns state of playback
    */
   public getQuality(): string {
-    return this.player.getQuality();
+    return this.embed.getQuality();
   }
 
   /**
@@ -240,7 +244,7 @@ declare global {
    * @returns video id
    */
   public getVideo(): string {
-    return this.player.getVideo();
+    return this.embed.getVideo();
   }
 
   /**
@@ -248,6 +252,6 @@ declare global {
    * @returns pause state
    */
   public isPaused(): boolean {
-    return this.player.isPaused();
+    return this.embed.isPaused();
   }
 }

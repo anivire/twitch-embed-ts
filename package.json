@@ -1,12 +1,22 @@
 {
-  "name": "twitch-embed-ts-wrapper",
+  "name": "@anivire/embed-ts",
   "version": "1.0.0",
-  "description": "Twitch embed and player typescript wrapper.",
-  "main": "index.ts",
+  "description": "Twitch Embed API Typescript wrapper.",
+  "main": "./src/index.ts",
+  "types": "./src/index.d.ts",
+  "type": "module",
   "scripts": {
     "build": "npx tsc index.ts"
   },
-  "author": "anivire",
+  "keywords": [
+    "twitch-embed-api",
+    "twitch-player",
+    "twitch-embed"
+  ],
+  "author": {
+    "name": "anivire",
+    "url": "https://github.com/anivire"
+  },
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.11.19",

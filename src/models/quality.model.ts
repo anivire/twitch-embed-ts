@@ -1,3 +1,6 @@
+/**
+ * Embed player video quality
+ */
 export interface Quality {
     bitrate: number
     codecs: string

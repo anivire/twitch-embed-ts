@@ -1,112 +1,93 @@
-import { TwitchPlayer } from "./TwitchPlayer";
-import { TwitchEmbedEvents, TwitchEmbedOptions } from "./types/embed.types";
-import { TwitchPlaybackStats } from "./types/playback.types";
-import { Quality } from "./types/quality.types";
-
-declare global {
-  interface Window {
-    Twitch: any;
-  }
-}
-
+import { TwitchPlaybackStats } from "../models/playback.model";
+import { TwitchPlayerEvents, TwitchPlayerOptions } from "../models/player.model";
+import { Quality } from "../models/quality.model";
+ 
 /**
- * Twitch embed player with/out chat
+ * Twitch player
  */
-export class TwitchEmbed {
-  private readonly embed!: TwitchEmbed;
-  private readonly player!: TwitchPlayer;
-  private readonly embedOptions: TwitchEmbedOptions;
-  private readonly divId: string;
+export class TwitchPlayer {
+  private player!: TwitchPlayer;
 
   /**
-   * Creates a new Twitch embed instance
-   * @param divId the div HTML element where the player will appear
-   * @param options the player initialization options
+   * Creates a new Twitch player from player instance
+   * @param player player instance
    */
-  constructor(divId: string, options: TwitchEmbedOptions) {
-    this.embedOptions = options;
-    this.divId = divId;
-
-    try {
-      if (window.Twitch && window.Twitch.Embed) {
-        this.embed = new window.Twitch.Embed(
-          this.divId, 
-          this.embedOptions
-        );
-
-        this.player = TwitchPlayer.InitPlayer(this.embed.getPlayer());
-      } 
-    } catch (e: unknown) {
-      console.error('Twitch embed library is not provided or loaded, please provide library to page.')
-      console.error(e instanceof Error && e.message);
-    }
+  constructor(player: TwitchPlayer) {
+    this.player = player;
   }
   
   /**
-   * Add event listener to twitch embed
-   * @param event embed event
+   * Creates a new Twitch player given a <div> element and some options for the player
+   * @param divId the div HTML element where the player will appear
+   * @param options the player initialization options
+   * @constructor creates a new Twitch player instance
+   */
+  public static CreatePlayer(divId: string, options: TwitchPlayerOptions): TwitchPlayer {
+    try {
+      if (window.Twitch.Player) {
+        const player = new window.Twitch.Player(divId, options);
+
+        return new TwitchPlayer(player);
+      } else {
+        throw new Error('Twitch embed library is not provided or loaded, please provide library to page.');
+      }
+    } catch (e: unknown) {
+      console.error('Error initializing Twitch player:', e instanceof Error ? e.message : e);
+      
+      throw e;
+    }
+  }
+
+  /**
+   * Add event listener to twitch player
+   * @param event player event
    * @param callback function
    */
   public addEventListener(
-    event: TwitchEmbedEvents, 
+    event: TwitchPlayerEvents, 
     callback: Function
   ): void {
-    this.embed.addEventListener(event, callback);
+    this.player.addEventListener(event, callback);
   }
 
   /**
-   * Remove event listener from twitch embed
-   * @param event embed event
+   * Remove event listener from twitch player
+   * @param event player event
    * @param callback function
    */
   public removeEventListener(
-    event: TwitchEmbedEvents, 
+    event: TwitchPlayerEvents, 
     callback: Function
   ): void {
-    this.embed.removeEventListener(event, callback);
-  }
-
-  /**
-   * Get div id for ijecting
-   * @returns div id
-   */
-  public getDivId(): string {
-    return this.divId;
-  }
-  
-  /**
-   * Get twitch embed player
-   */
-  public getPlayer(): TwitchPlayer {
-    return this.player;
+    this.player.removeEventListener(event, callback);
   }
 
   /**
    * Disables display of Closed Captions
    */
   public disableCaptions(): void {
-    this.embed.disableCaptions();
+    this.player.disableCaptions();
   }
 
   /**
    * Enables display of Closed Captions
    */
   public enableCaptions(): void {
-    this.embed.enableCaptions();
+    this.player.enableCaptions();
   }
 
   /**
    * Pauses the player
    */
   public pause(): void {
-    this.embed.pause();
+    this.player.pause();
   }
 
   /**
    * Begins playing the specified video
    */
   public play(): void {
-    this.embed.play();
+    this.player.play();
   }
 
   /**
@@ -114,7 +95,7 @@ export class TwitchEmbed {
    * @param timestamp time
    */
   public seek(timestamp: number): void {
-    this.embed.seek(timestamp);
+    this.player.seek(timestamp);
   }
 
   /**
@@ -122,7 +103,7 @@ export class TwitchEmbed {
    * @param channel channel name
    */
   public setChannel(channel: string): void {
-    this.embed.setChannel(channel);
+    this.player.setChannel(channel);
   }
 
   /**
@@ -135,7 +116,7 @@ export class TwitchEmbed {
    * @param videoId video id
    */
   public setCollection(collectionId: string, videoId?: string): void {
-    this.embed.setCollection(collectionId, videoId)
+    this.player.setCollection(collectionId, videoId)
   }
 
   /**
@@ -145,7 +126,7 @@ export class TwitchEmbed {
    * @param quality 
    */
   public setQuality(quality: string): void {
-    this.embed.setQuality(quality);
+    this.player.setQuality(quality);
   }
 
   /**
@@ -154,7 +135,7 @@ export class TwitchEmbed {
    * @param timestamp 
    */
   public setVideo(videoId: string, timestamp: number): void {
-    this.embed.setVideo(videoId, timestamp);
+    this.player.setVideo(videoId, timestamp);
   }
 
   /**
@@ -162,7 +143,7 @@ export class TwitchEmbed {
    * @returns mute state
    */
   public getMuted(): boolean {
-    return this.embed.getMuted();
+    return this.player.getMuted();
   }
 
   /**
@@ -170,7 +151,7 @@ export class TwitchEmbed {
    * @param muted mute state
    */
   public setMuted(muted: boolean): void {
-    this.embed.setMuted(muted);
+    this.player.setMuted(muted);
   }
  
   /**
@@ -178,7 +159,7 @@ export class TwitchEmbed {
    * @returns value between 0.0 and 1.0
    */
   public getVolume(): number {
-    return this.embed.getVolume();
+    return this.player.getVolume();
   }
 
   /**
@@ -186,15 +167,15 @@ export class TwitchEmbed {
    * @param volumeLevel value between 0.0 and 1.0
    */
   public setVolume(volumeLevel: number): void {
-    this.embed.setVolume(volumeLevel);
+    this.player.setVolume(volumeLevel);
   }
 
   /**
-   * Returns an object with statistics on the embedded video player and the current live stream or VOD
+   * Returns an object with statistics on the playerded video player and the current live stream or VOD
    * @returns object with statistics
    */
   public getPlaybackStats(): TwitchPlaybackStats {
-    return this.embed.getPlaybackStats();
+    return this.player.getPlaybackStats();
   }
 
   /**
@@ -202,7 +183,7 @@ export class TwitchEmbed {
    * @returns channel name
    */
   public getChannel(): string {
-    return this.embed.getChannel();
+    return this.player.getChannel();
   }
 
   /**
@@ -210,7 +191,7 @@ export class TwitchEmbed {
    * @returns video timestamp
    */
   public getCurrentTime(): number {
-    return this.embed.getCurrentTime();
+    return this.player.getCurrentTime();
   }
 
   /**
@@ -218,7 +199,7 @@ export class TwitchEmbed {
    * @returns duration of the video
    */
   public getDuration(): number {
-    return this.embed.getDuration();
+    return this.player.getDuration();
   }
 
   /**
@@ -226,7 +207,7 @@ export class TwitchEmbed {
    * @returns stream status
    */
   public getEnded(): boolean {
-    return this.embed.getEnded();
+    return this.player.getEnded();
   }
 
   /**
@@ -234,7 +215,7 @@ export class TwitchEmbed {
    * @returns video qualities
    */
   public getQualities(): Quality[] {
-    return this.embed.getQualities();
+    return this.player.getQualities();
   }
 
   /**
@@ -242,7 +223,7 @@ export class TwitchEmbed {
    * @returns state of playback
    */
   public getQuality(): string {
-    return this.embed.getQuality();
+    return this.player.getQuality();
   }
 
   /**
@@ -250,7 +231,7 @@ export class TwitchEmbed {
    * @returns video id
    */
   public getVideo(): string {
-    return this.embed.getVideo();
+    return this.player.getVideo();
   }
 
   /**
@@ -258,6 +239,6 @@ export class TwitchEmbed {
    * @returns pause state
    */
   public isPaused(): boolean {
-    return this.embed.isPaused();
+    return this.player.isPaused();
   }
 }
