@@ -1,12 +1,16 @@
 {
   "name": "@anivire/twitch-embed-ts",
-  "version": "1.0.0",
-  "description": "Twitch Embed API Typescript wrapper.",
-  "main": "./src/index.ts",
-  "types": "./src/index.d.ts",
-  "type": "module",
+  "version": "0.0.1",
+  "description": "Twitch Embed API Typescript wrapper",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "url": "https://github.com/anivire/twitch-embed-ts"
+  },
   "scripts": {
-    "build": "npx tsc index.ts"
+    "build": "tsup ./src/index.ts --format cjs,esm --dts",
+    "lint": "tsc"
   },
   "keywords": [
     "twitch-embed-api",
@@ -17,10 +21,14 @@
     "name": "anivire",
     "url": "https://github.com/anivire"
   },
-  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anivire/twitch-embed-ts/issues"
+  },
+  "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.11.19",
-    "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "tsup": "^8.0.2"
   }
 }

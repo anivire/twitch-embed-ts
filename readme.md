@@ -4,6 +4,13 @@
 
 ### Typescript Wrapper для Twitch Embed плеера / чата, основаный на [twitch embed API](https://dev.twitch.tv/docs/embed/)
 
+# Установка 
+```bash
+npm i @anivire/twitch-embed-ts
+# or
+yarn add @anivire/twitch-embed-ts
+```
+
 # Использование
 Обязательно для начала добавьте оффициальный скрипт Twitch Embed или Player в ваш `index.html`:
 ```html

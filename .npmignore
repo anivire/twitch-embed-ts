@@ -1,0 +1,9 @@
+/node_modules
+/src
+
+.vscode
+.changeset
+.github
+
+tsconfig.json
+tsup.config.ts

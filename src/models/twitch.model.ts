@@ -3,7 +3,7 @@ import { TwitchEmbedOptions } from "./embed.model";
 import { TwitchPlayerOptions } from "./player.model";
 
 declare global {
-    interface Window {
+    export interface Window {
         Twitch: {
             Embed: new (divId: string, options: TwitchEmbedOptions) => TwitchEmbed;
             Player: new (divId: string, options: TwitchPlayerOptions) => TwitchPlayer;
