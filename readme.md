@@ -2,27 +2,31 @@
 
 ![Logo](logo.png)
 
-### Typescript Wrapper для Twitch Embed плеера / чата, основаный на [twitch embed API](https://dev.twitch.tv/docs/embed/)
+<center>Typescript Wrapper for Twitch Embed player / chat, based on twitch embed API</center><br/>
 
-# Установка 
+## Links
+
+📚 View wrapper [docs](https://twitch-embed-ts-docs.vercel.app/getting-started),<br/>
+📖 View official twitch [docs](https://dev.twitch.tv/docs/embed/)
+
+
+## Intallation 
 ```bash
 npm i @anivire/twitch-embed-ts
 # or
 yarn add @anivire/twitch-embed-ts
 ```
 
-# Использование
-Обязательно для начала добавьте оффициальный скрипт Twitch Embed или Player в ваш `index.html`:
+## Basic usage
+Be sure to add the official Twitch Embed or Player script to your `index.html` first:
 ```html
 <script src="https://embed.twitch.tv/embed/v1.js"></script>
 <!-- OR / AND -->
 <script src="https://player.twitch.tv/embed/v1.js"></script>
 ```
 
-### Создание нового экземпляра Twitch Embed
-
-`TwitchEmbed` позволяет встраивать всё, включая плеер и/или чат. Он также содержит `TwitchPlayer`, с которым можно взаимодействовать вызвав `embed.getPlayer()`
-
+### Creating new TwitchEmbed instance
+`TwitchEmbed` allows you to embed anything, including a player and/or chat. It also contains a `TwitchPlayer`, which can be interacted by calling `embed.getPlayer()`:
 ```ts
 const embed = new TwitchEmbed(
     'twitch-embed', 
@@ -34,21 +38,12 @@ const embed = new TwitchEmbed(
     });
 ```
 
-1. В этом примере первый аргумент `twitch-embed` является идентификатором для `<div>` в который будет встраиваться плеер Twitch в виде `<iframe>`. 
+1. First argument `TwitchEmbed` is the identifier for the `<div>` in which the Twitch player will be embedded as a `<iframe>`.
 
-2. Вторым аргументом является объект с настройками плеера, которые включают обязательные параметры ширины, высоты плеера и канал / видео / коллекция, где канал имеет высший приоритет, что означает если указан и канал и видео, то использовать будет канал (прямая трансляция). 
+2. Second argument is an object with player settings, which include parameters width, player height, and channel / video / collection, where channel has highest priority, meaning if both channel and video are specified, only channel (live) will be used.
 
-    Дополнительно вместо числового значения высота и ширины вы можете указать процентный размер, например `100%`.
-
-    Важно также указать в `parent` домен, на котором будет размещаться ваш плеер, для корректной работы плеера.
-
-    Список остальных параметров настроек плеера можете посмотреть на [вики](#).
-
-
-### Создание нового экземпляра Twitch Player
-
-`TwitchPlayer` позволяет встраивать только плеер, без чата.
-
+### Creating new TwitchPlayer instance
+`TwitchPlayer` allows you to embed only player, without chat:
 ```ts
 const player = new TwitchPlayer(
     'twitch-player', 
@@ -60,27 +55,4 @@ const player = new TwitchPlayer(
     });
 ```
 
-### Реагирование на события
-
-```ts
-player.addEventListener(TwitchPlayerEvents.READY, () => {
-    console.info('Twitch Player is ready to work!')
-});
-```
-
-Список остальных типов событий можете посмотреть на [вики](#).
-
-### Взаимодействие с плеером
-
-```ts
-// Установка громкости плеера
-player.setVolume(0.45);
-
-// Возобновление проигрывания
-player.play();
-
-// Получение данных плеера
-playbackStats = player.getPlaybackStats();
-```
-
-Список остальных функций можете посмотреть на [вики](#).
+All other info provided on wrapper [docs](https://twitch-embed-ts-docs.vercel.app/getting-started).
